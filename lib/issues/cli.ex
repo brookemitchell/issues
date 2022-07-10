@@ -13,6 +13,19 @@ defmodule Issues.Cli do
     |> process()
   end
 
+  def process(:help) do
+    IO.puts("""
+    usage:  issues <user> <project> [ count | #{@default_count} ]
+    """)
+
+    System.halt()
+  end
+
+  def process({user, project, _count}) do
+    # Issues.GithubIssues.fetch(user, project)
+    1
+  end
+
   @doc """
   argv can be -h or --help, which returns help.
 
@@ -22,7 +35,6 @@ defmodule Issues.Cli do
   Return a tuple of `{user, project, count}`, or `:help` if
   help given
   """
-
   def parse_args(argv) do
     OptionParser.parse(argv,
       switches: [help: :boolean],
