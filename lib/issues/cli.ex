@@ -8,7 +8,9 @@ defmodule Issues.Cli do
   """
 
   def run(argv) do
-    parse_args(argv)
+    argv
+    |> parse_args()
+    |> process()
   end
 
   @doc """
@@ -22,24 +24,23 @@ defmodule Issues.Cli do
   """
 
   def parse_args(argv) do
-    parse =
-      OptionParser.parse(argv,
-        switches: [help: :boolean],
-        aliases: [h: :help]
-      )
+    OptionParser.parse(argv,
+      switches: [help: :boolean],
+      aliases: [h: :help]
+    )
+    |> elem(1)
+    |> args_to_internal_representation()
+  end
 
-    case parse do
-      {[help: true], _, _} ->
-        :help
+  defp args_to_internal_representation([user, project]) do
+    {user, project, @default_count}
+  end
 
-      {_, [user, project, count], _} ->
-        {user, project, String.to_integer(count)}
+  defp args_to_internal_representation([user, project, count]) do
+    {user, project, String.to_integer(count)}
+  end
 
-      {_, [user, project], _} ->
-        {user, project, @default_count}
-
-      _ ->
-        :help
-    end
+  defp args_to_internal_representation(_) do
+    :help
   end
 end
