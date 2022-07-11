@@ -39,13 +39,15 @@ defmodule Issues.Cli do
     System.halt()
   end
 
-  def process({user, project, _count}),
+  def process({user, project, count}),
     do:
       Issues.GithubIssues.fetch(user, project)
       |> decode_response()
       # |> IO.inspect()
       |> sort_into_desc_order()
+      |> last(count)
 
+  @spec sort_into_desc_order(any) :: list
   def sort_into_desc_order(list_of_issues) do
     list_of_issues
     |> Enum.sort(&(&1["created_at"] >= &2["created_at"]))
@@ -67,4 +69,8 @@ defmodule Issues.Cli do
   end
 
   defp args_to_internal_representation(_), do: :help
+
+  defp last(list, count) do
+    list |> Enum.take(count) |> Enum.reverse()
+  end
 end
