@@ -43,7 +43,13 @@ defmodule Issues.Cli do
     do:
       Issues.GithubIssues.fetch(user, project)
       |> decode_response()
-      |> IO.inspect()
+      # |> IO.inspect()
+      |> sort_into_desc_order()
+
+  def sort_into_desc_order(list_of_issues) do
+    list_of_issues
+    |> Enum.sort(&(&1["created_at"] >= &2["created_at"]))
+  end
 
   def decode_response({:ok, body}), do: body
 
