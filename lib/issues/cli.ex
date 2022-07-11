@@ -13,26 +13,6 @@ defmodule Issues.Cli do
     |> process()
   end
 
-  def process(:help) do
-    IO.puts("""
-    usage:  issues <user> <project> [ count | #{@default_count} ]
-    """)
-
-    System.halt()
-  end
-
-  def process({user, project, _count}) do
-    Issues.GithubIssues.fetch(user, project)
-    |> decode_response()
-  end
-
-  def decode_response({:ok, body}), do: body
-
-  def decode_response({:error, error}) do
-    IO.puts("Error fetching from github: #{error["message"]}")
-    System.halt(2)
-  end
-
   @doc """
   argv can be -h or --help, which returns help.
 
@@ -51,6 +31,27 @@ defmodule Issues.Cli do
     |> args_to_internal_representation()
   end
 
+  def process(:help) do
+    IO.puts("""
+    usage:  issues <user> <project> [ count | #{@default_count} ]
+    """)
+
+    System.halt()
+  end
+
+  def process({user, project, _count}),
+    do:
+      Issues.GithubIssues.fetch(user, project)
+      |> decode_response()
+      |> IO.inspect()
+
+  def decode_response({:ok, body}), do: body
+
+  def decode_response({:error, error}) do
+    IO.puts("Error fetching from github: #{error["message"]}")
+    System.halt(2)
+  end
+
   defp args_to_internal_representation([user, project]) do
     {user, project, @default_count}
   end
@@ -59,7 +60,5 @@ defmodule Issues.Cli do
     {user, project, String.to_integer(count)}
   end
 
-  defp args_to_internal_representation(_) do
-    :help
-  end
+  defp args_to_internal_representation(_), do: :help
 end
