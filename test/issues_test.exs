@@ -1,6 +1,6 @@
 defmodule IssuesTest do
   use ExUnit.Case
-  doctest Issues
+  doctest Issues.TableFormat
 
   import Issues.Cli,
     only: [
