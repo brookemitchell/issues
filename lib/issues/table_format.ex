@@ -25,7 +25,7 @@ defmodule Issues.TableFormat do
   end
 
   def format_for(column_widths) do
-    Enum.map_join(column_widths, " / ", &"~-#{&1 + 1}s") <> "~n"
+    Enum.map_join(column_widths, " / ", &"~-#{&1}s") <> "~n"
   end
 
   def seperator(column_widths) do

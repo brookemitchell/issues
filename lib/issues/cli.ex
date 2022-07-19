@@ -1,4 +1,6 @@
 defmodule Issues.Cli do
+  import Issues.TableFormat, only: [print_table_for_columns: 2]
+
   @default_count 4
 
   @moduledoc """
@@ -46,7 +48,7 @@ defmodule Issues.Cli do
       |> decode_response()
       |> sort_into_desc_order()
       |> last(count)
-      |> Issues.TableFormat.print_table_for_columns(["number", "created_at", "title"])
+      |> print_table_for_columns(["number", "created_at", "title"])
 
   @spec sort_into_desc_order(any) :: list
   def sort_into_desc_order(list_of_issues) do
