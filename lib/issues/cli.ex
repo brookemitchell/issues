@@ -7,6 +7,7 @@ defmodule Issues.Cli do
   last _n_ issues in a github project.
   """
 
+  @spec run([binary]) :: list
   def run(argv) do
     argv
     |> parse_args()
@@ -43,9 +44,9 @@ defmodule Issues.Cli do
     do:
       Issues.GithubIssues.fetch(user, project)
       |> decode_response()
-      # |> IO.inspect()
       |> sort_into_desc_order()
       |> last(count)
+      |> Issues.TableFormat.print_table_for_columns(["number", "created_at", "title"])
 
   @spec sort_into_desc_order(any) :: list
   def sort_into_desc_order(list_of_issues) do
