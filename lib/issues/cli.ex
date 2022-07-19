@@ -9,8 +9,7 @@ defmodule Issues.Cli do
   last _n_ issues in a github project.
   """
 
-  @spec run([binary]) :: list
-  def run(argv) do
+  def main(argv) do
     argv
     |> parse_args()
     |> process()
